@@ -33,11 +33,9 @@ def draw():
         particle.edges()
         particle.show()
     filter(BLUR, 4)
-    filter(POSTERIZE, 2)
+    filter(POSTERIZE, 4)
     
     t += 0.01
-    if t > 10:
-        particles.append(Particle(width, height))
-        t -= 1
-    #print(t)
-    print(frameRate)
+    
+    text("PRESS SPACE TO RESTART THE SIMULATION WITH NEW PARTICLES", w/10, h/16)
+    
