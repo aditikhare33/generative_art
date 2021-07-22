@@ -1,3 +1,5 @@
+//const { push, pop } = require("core-js/core/array");
+
 class Droplet {
   constructor(x, y, z) {
     this.size = 10;
@@ -31,14 +33,12 @@ var w, h, cols, rows;
 var t = 0.0;
 
 function setup() {
-  w = windowWidth;
-  h = windowHeight;
+  w = 800;
+  h = 800;
   createCanvas(w, h, WEBGL);
 
-  //w *= 1.9;
-  cols = w / scl;
+  cols = (w*2) / scl;
   rows = h / scl;
-  //hint(ENABLE_DEPTH_SORT);
   background(50);
   angleMode(RADIANS);
   frameRate(15);
@@ -47,17 +47,22 @@ function setup() {
 var droplets = [];
 
 function draw() {
-  background(0);
+  background(255);
   
-  if (mouseIsPressed) {
+  /*if (mouseIsPressed) {
     let new_droplet = new Droplet(mouseX, mouseY, 0);
     droplets.push(new_droplet);
   }
-  droplets.forEach(update);
+  droplets.forEach(update); */
   //draw_box();
-  //style_mesh();
-  //draw_mesh();
-  //t += 0.3;
+  lights();
+  style_mesh();
+  draw_mesh();
+
+  textFont('Georgia');
+  text(mouseY, w/10, h/10);
+
+  t += 0.1;
 }
 
 function update(value, index, array) {
@@ -68,15 +73,18 @@ function update(value, index, array) {
 }
 
 function lights() {
-  
+  pointLight(0, 0, 255, mouseX, mouseY, w);
+  //pointLight(0, 0, 255, mouseX, mouseY, windowwidth/2);
 }
 
 function draw_box() {
+  push();
   noFill();
   stroke(255);
   rotateY(0.4);
   rotateX(-0.1);
   box(h/2);
+  pop();
 }
 
 function c_noise(t1, t2) {
@@ -85,10 +93,11 @@ function c_noise(t1, t2) {
 
 function style_mesh() {
   rotateX(1.1);
-  translate(-w/2, -h/2, -h/4);
+  translate(-(2*w)/2, -h/2, -h/4);
 
-  noFill();
-  stroke(255);
+  //noFill();
+  noStroke()
+  stroke(0);
  //ambientMaterial();
 }
 
@@ -99,6 +108,7 @@ function draw_mesh() {
     beginShape(TRIANGLE_STRIP);
     for(let i = 0; i < cols; i++) {
       vertex(i*scl, j*scl, c_noise(xoff, yoff));
+      //normalMaterial();
       vertex(i*scl, (j+1)*scl, c_noise(xoff, yoff + 0.1));
       xoff += 0.1;
     }

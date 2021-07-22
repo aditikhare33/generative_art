@@ -1,6 +1,6 @@
 cols = 0
 rows = 0
-scl = 20 #scale variable
+scl = 17 #scale variable
 terrain = [[]]
 w = 1500
 h = 900
@@ -21,53 +21,58 @@ def setup():
     print(img)
     
     size(1000, 600, P3D)
-    cols = w / scl
+    cols = int(w*1.5)/ scl
     rows = h / scl
-    yoff = 0 # y off set
     terrain = [[0 for x in range(w)] for y in range(h)] 
-    frameRate(6)
-    colorMode(HSB, 359, 100, 100)
+    frameRate(8)
+    #colorMode(HSB, 359, 100, 100)
     #file = new SoundFile("wind-1.mp3");
     #file.play();
     
 def draw():
-    camera(width/2, height/2, 300, width/2, height/2, 0, 0, 1, 0);
-    pointLight(200, 200, 200, width/2, height/2, -200);
+    #camera(width/2, height/2, 300, width/2, height/2, 0, 0, 1, 0);
+    #pointLight(0, 0, 255, width/2, height/2, -200);
     global terrain
     global flying
 
     strokeWeight(4)
-    background(354, 90, 100)
+    background(255) #background(0, 0, 100)
     
-    translate(width/2, height/2) # draw everything relative to the center of the window
+    push()
+    translate(width/2, height/2)
     rotateX(PI/3)
-    translate(-w/2, -h/2)
+    translate(-int(w*1.5)/2, -h/2)
     
-    stroke(233, 76, 100)
-    fill(233, 76, 100)
-    #fill(255)
+    #stroke(0, 0, 255)
+    noStroke()
+    colorMode(HSB, 255)
+    pointLight(190, 255, 255, width, height, width/2);
+    pointLight(50, 255, 100, mouseX, height, mouseY);
+    colorMode(RGB)
     draw_terrain()
-    #flying -= 0.1
-    directionalLight(51, 102, 126, 0, -1, 0);
-    #noFill()
-    #stroke(210, 30, 100)
-    #draw_terrain()
-    #filter(BLUR, 3)
-    #filter(POSTERIZE, 2)
-    #saveFrame("output/terrain_####.png")
+    pop()
     
-yoff = 0
+    filter(POSTERIZE, 7)
+    push()
+    fill(0)
+    str_ = "y-coord:" + str(mouseY)
+    text(str_, w/10, h/10)
+    str_ = "x-coord:" + str(mouseX)
+    text(str_, w/10, 1.2*h/10)
+    pop()
+    #flying -= 0.1
+    #directionalLight(51, 102, 126, 0, -1, 0);
+    
+xoff = 0
 
 def draw_terrain():
-    global yoff   #flying # y off set
-
+    global xoff  
     for y in range(0, rows):
-        xoff = 0
+        yoff = 0
         for x in range(0, cols):
             terrain[x][y] = map(noise(xoff, yoff), 0, 1, -50, 50)
-            xoff += 0.1
-        yoff += 0.1
-    
+            yoff += 0.07
+        xoff += 0.07
     for y in range(0, rows):
         beginShape(TRIANGLE_STRIP) #triangular mesh 
         texture(img)
