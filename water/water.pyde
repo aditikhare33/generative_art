@@ -1,10 +1,9 @@
 cols = 0
 rows = 0
 scl = 3 #scale variable
-terrain = [[]]
+water = [[]]
 w = 1500
 h = 900
-flying = 0
 img = 0
 incr = 0
 
@@ -13,7 +12,7 @@ def setup():
     
     global cols
     global rows 
-    global terrain
+    global water
     global w 
     global h
     global img 
@@ -24,7 +23,7 @@ def setup():
     size(1000, 600, P3D)
     cols = int(w*1.5)/ scl
     rows = h / scl
-    terrain = [[0 for x in range(w)] for y in range(h)] 
+    water = [[0 for x in range(w)] for y in range(h)] 
 
     
     #colorMode(HSB, 359, 100, 100)
@@ -34,7 +33,7 @@ def setup():
 def draw():
     #camera(width/2, height/2, 300, width/2, height/2, 0, 0, 1, 0);
     #pointLight(0, 0, 255, width/2, height/2, -200);
-    global terrain
+    global water
     global incr
 
     strokeWeight(4)
@@ -51,7 +50,7 @@ def draw():
     pointLight(190, 255, 255, width, height, width/2);
     pointLight(50, 255, 100, mouseX, height, mouseY);
     colorMode(RGB)
-    draw_terrain()
+    draw_water()
     pop()
     
     filter(POSTERIZE, 7)
@@ -70,18 +69,18 @@ def draw():
     
 xoff = 0
 
-def draw_terrain(): 
+def draw_water(): 
     global xoff
     for y in range(0, rows):
         yoff = 0
         for x in range(0, cols):
-            terrain[x][y] = map(noise(xoff, sin(yoff) + xoff), 0, 1, -50, 50)
+            water[x][y] = map(noise(xoff, sin(yoff) + xoff), 0, 1, -50, 50)
             yoff += sin(xoff)*0.001 + 0.01
         xoff += 0.01
     for y in range(0, rows):
         beginShape(TRIANGLE_STRIP) #triangular mesh 
         texture(img)
         for x in range(0, cols):
-            vertex(x*scl, y*scl, terrain[x][y])
-            vertex(x*scl, (y+1)*scl, terrain[x][y+1])
+            vertex(x*scl, y*scl, water[x][y])
+            vertex(x*scl, (y+1)*scl, water[x][y+1])
         endShape()
