@@ -1,6 +1,6 @@
 cols = 0
 rows = 0
-scl = 3 #scale variable
+scl = 30 #scale variable
 water = [[]]
 w = 1500
 h = 900
@@ -25,10 +25,7 @@ def setup():
     rows = h / scl
     water = [[0 for x in range(w)] for y in range(h)] 
 
-    
-    #colorMode(HSB, 359, 100, 100)
-    #file = new SoundFile("wind-1.mp3");
-    #file.play();
+    frameRate(7)
     
 def draw():
     #camera(width/2, height/2, 300, width/2, height/2, 0, 0, 1, 0);
@@ -37,23 +34,28 @@ def draw():
     global incr
 
     strokeWeight(4)
-    background(255) #background(0, 0, 100)
+    background(0) #background(0, 0, 100)
+    colorMode(HSB)
     
     push()
+    filter(POSTERIZE, 7)
     translate(width/2, height/2)
     rotateX(PI/3)
+    rotateY(sin(xoff)/30)
     translate(-int(w*1.5)/2, -h/2)
     
     #stroke(0, 0, 255)
     noStroke()
-    colorMode(HSB, 255)
-    pointLight(190, 255, 255, width, height, width/2);
-    pointLight(50, 255, 100, mouseX, height, mouseY);
+    colorMode(HSB)
+    pointLight(200, 100, 100, width, height, width/2);
+    pointLight(100, 100, 140, mouseX, height, mouseY);
+    pointLight(40, 100, 140, mouseY, height, mouseX);
+    
     colorMode(RGB)
     draw_water()
     pop()
     
-    filter(POSTERIZE, 7)
+
     push()
     fill(0)
     str_ = "light y-coord:" + str(mouseY)
@@ -61,22 +63,21 @@ def draw():
     str_ = "light x-coord:" + str(mouseX)
     text(str_, w/10, 1.2*h/10)
     pop()
-    #flying -= 0.1
-    #directionalLight(51, 102, 126, 0, -1, 0);
+    directionalLight(51, 102, 12, 0, height, 0);
     incr += 0.01
     
-    saveFrame("output/pic_#####.png")
+    #saveFrame("output/pic_#####.png")
     
-xoff = 0
+xoff = 0f
 
 def draw_water(): 
     global xoff
     for y in range(0, rows):
         yoff = 0
         for x in range(0, cols):
-            water[x][y] = map(noise(xoff, sin(yoff) + xoff), 0, 1, -50, 50)
-            yoff += sin(xoff)*0.001 + 0.01
-        xoff += 0.01
+            water[x][y] = map(noise(xoff, sin(yoff) + xoff), 0, 1, -100, 100)
+            yoff += (sin(xoff)*0.001 + 0.1) * scl /30
+        xoff += 0.1 * scl / 30
     for y in range(0, rows):
         beginShape(TRIANGLE_STRIP) #triangular mesh 
         texture(img)
